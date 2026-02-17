@@ -1,30 +1,25 @@
 name: Motor de Extraccion DIAN
 on:
-  workflow_dispatch: # Esto activa el botón manual para que tú lo inicies
+  workflow_dispatch:
 
 jobs:
-  descarga_masiva:
+  descarga:
     runs-on: ubuntu-latest
     steps:
-      - name: 1. Copiando el codigo
-        uses: actions/checkout@v4
-
-      - name: 2. Configurando Python
+      - uses: actions/checkout@v4
+      - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
-      - name: 3. Instalando herramientas de navegacion
+      - name: Instalar Playwright
         run: |
           pip install playwright pandas
-          playwright install chromium
-          playwright install-deps
-
-      - name: 4. Ejecutando extraccion de facturas
+          python -m playwright install chromium --with-deps
+      - name: Ejecutar Extraccion
         run: python main.py
-
-      - name: 5. Entregando archivos PDF
+      - name: Subir Resultados
         uses: actions/upload-artifact@v4
+        if: always() # Esto obliga a buscar la carpeta aunque haya errores
         with:
-          name: Facturas_Descargadas_DIAN
-          path: ./facturas/
+          name: facturas-pdf
+          path: facturas/
