@@ -11,15 +11,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          cache: 'pip' # Esto acelera las próximas ejecuciones
       - name: Instalar Playwright
         run: |
           pip install playwright pandas
           python -m playwright install chromium --with-deps
+          echo ">>> INSTALACION COMPLETADA <<<"
       - name: Ejecutar Extraccion
         run: python main.py
-      - name: Subir Resultados
-        uses: actions/upload-artifact@v4
-        if: always() # Esto obliga a buscar la carpeta aunque haya errores
-        with:
-          name: facturas-pdf
-          path: facturas/
