@@ -1,17 +1,19 @@
-name: Ejecutor DIAN
+name: Motor de Extraccion
 on:
-  workflow_dispatch: # Esto activa el botón para que tú lo corras cuando quieras
+  workflow_dispatch: # ESTO es lo que crea el botón manual
 
 jobs:
   ejecucion:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - setup-python: '3.10'
-      - name: Instalar Herramientas
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Instalar Navegador
         run: |
           pip install playwright
           playwright install chromium
           playwright install-deps
-      - name: Correr Script
+      - name: Ejecutar Script
         run: python main.py
