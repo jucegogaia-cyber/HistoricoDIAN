@@ -6,16 +6,25 @@ jobs:
   descarga:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Configurar Python
+      - name: 1. Trayendo el codigo
+        uses: actions/checkout@v4
+
+      - name: 2. Configurando Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          cache: 'pip' # Esto acelera las próximas ejecuciones
-      - name: Instalar Playwright
+
+      - name: 3. Instalando Navegador
         run: |
           pip install playwright pandas
           python -m playwright install chromium --with-deps
-          echo ">>> INSTALACION COMPLETADA <<<"
-      - name: Ejecutar Extraccion
+
+      - name: 4. Ejecutando Extraccion
         run: python main.py
+
+      - name: 5. Subir PDFS
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Facturas_DIAN
+          path: facturas/
