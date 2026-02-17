@@ -1,19 +1,30 @@
-name: Motor de Extraccion
+name: Motor de Extraccion DIAN
 on:
-  workflow_dispatch: # ESTO es lo que crea el botón manual
+  workflow_dispatch: # Esto activa el botón manual para que tú lo inicies
 
 jobs:
-  ejecucion:
+  descarga_masiva:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: 1. Copiando el codigo
+        uses: actions/checkout@v4
+
+      - name: 2. Configurando Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Instalar Navegador
+
+      - name: 3. Instalando herramientas de navegacion
         run: |
-          pip install playwright
+          pip install playwright pandas
           playwright install chromium
           playwright install-deps
-      - name: Ejecutar Script
+
+      - name: 4. Ejecutando extraccion de facturas
         run: python main.py
+
+      - name: 5. Entregando archivos PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: Facturas_Descargadas_DIAN
+          path: ./facturas/
